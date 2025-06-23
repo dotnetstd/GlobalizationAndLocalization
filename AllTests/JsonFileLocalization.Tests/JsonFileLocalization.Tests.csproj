@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\AllStrings.ru-RU-Test.json" />
+    <None Remove="Resources\AllStrings.ru-RU.json" />
+    <None Remove="Resources\AllStrings.ru.json" />
+    <None Remove="Resources\Format.en.json" />
+    <None Remove="Resources\IntArrayObject.ru-RU.json" />
+    <None Remove="Resources\JsonFileLocalization.Tests.TestData.Models.IntArrayObject.ru-RU.json" />
+    <None Remove="Resources\JsonFileLocalization.Tests.TestData.Models.TestStringValue.ru-RU.json" />
+    <None Remove="Resources\LocationTest.ru-RU.json" />
+    <None Remove="Resources\Some\Data.File.en-US.json" />
+    <None Remove="Resources\Strategy.ru-RU.json" />
+    <None Remove="Resources\Strategy.ru.json" />
+    <None Remove="Resources\Some\Folder\name.en-US.json" />
+    <None Remove="Resources\WithCulture.en.json" />
+    <None Remove="Resources\WithCulture.et.json" />
+    <None Remove="Resources\_Layout.en-US.json" />
+    <None Remove="Resources\_Layout.ru-RU.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.analyzers" Version="0.8.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonFileLocalization\JsonFileLocalization.csproj" />
+  </ItemGroup>
+
+</Project>

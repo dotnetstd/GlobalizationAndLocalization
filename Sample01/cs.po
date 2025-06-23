@@ -1,0 +1,16 @@
+﻿msgid "Hello world!"
+msgstr "Ahoj světe!!"
+
+msgid "There is one item."
+msgid_plural "There are {0} items."
+msgstr[0] "Existuje jedna položka."
+msgstr[1] "Existují {0} položky."
+msgstr[2] "Existuje {0} položek."
+
+
+msgid "There is one item."
+msgid_plural "There are {0} items."
+msgstr[0] "Il y a un élément."
+msgstr[1] "Il y a {0} éléments."
+
+https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html

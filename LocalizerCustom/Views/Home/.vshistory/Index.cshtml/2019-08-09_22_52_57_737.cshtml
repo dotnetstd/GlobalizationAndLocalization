@@ -1,0 +1,27 @@
+@inject CustomLocalizer localizer
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@localizer["HelloWorld"]</h2>
+    </div>
+</div>
+
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@model SampleModel
+@inject IViewLocalizer localizer
+@inject IHtmlLocalizer<SharedResource> sharedLocalizer
+CurrentCulture: @CultureInfo.CurrentCulture.Name
+<br />
+CurrentUICulture: @CultureInfo.CurrentUICulture.Name
+<br />
+Resources\Views\Home\Index: @localizer["Hello"]
+<br />
+Resources\SharedResource: @sharedLocalizer["Hello"]
+<br />
+@Html.DisplayNameFor(m => m.Content)
+<br />

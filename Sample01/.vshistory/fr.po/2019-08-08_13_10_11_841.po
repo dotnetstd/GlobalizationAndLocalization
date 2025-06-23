@@ -1,0 +1,12 @@
+﻿msgid "Hello world!"
+msgstr "Bonjour le monde!"
+
+#: Services/EmailService.cs:29
+msgid "Enter a comma separated list of email addresses."
+msgstr "Entrez une liste d'emails séparés par une virgule."
+
+#: Views/Email.cshtml:112
+msgid "The email address is \"{0}\"."
+msgid_plural "The email addresses are \"{0}\"."
+msgstr[0] "L'adresse email est \"{0}\"."
+msgstr[1] "Les adresses email sont \"{0}\""

@@ -1,0 +1,12 @@
+{
+	"Logging": {
+		"LogLevel": {
+			"Default": "Warning"
+		}
+	},
+	"AllowedHosts": "*",
+	"JsonLocalizerOptions": {
+		"ResourcesPath": "Localization",
+		"CacheKeyPrefix": "__localization__"
+	}
+}

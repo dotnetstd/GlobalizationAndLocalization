@@ -1,0 +1,22 @@
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
+using SecretCollect.Localization.SqlLocalizer.Data;
+
+namespace SecretCollect.Localization.Web
+{
+    public class Program
+    {
+        public static void Main2(string[] args)
+        {
+            CreateWebHostBuilder(args)
+                .Build()
+                .MigrateDatabase<LocalizationContext>()
+                .Run();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+    }
+}

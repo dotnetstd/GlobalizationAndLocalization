@@ -1,0 +1,45 @@
+@*@page
+	@model IndexModel
+	@{
+		ViewData["Title"] = "Home page";
+	}
+
+	<div class="text-center">
+		<h1 class="display-4">Welcome</h1>
+		<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	</div>*@
+
+
+@page
+@model IndexModel
+<!DOCTYPE html>
+<html>
+<head>
+	<title>@UI.PageTitle</title>
+</head>
+<body>
+	<h1>@UI.PageTitle</h1>
+	<form method="post">
+		@Html.EditorFor(x => x.Input)
+		<hr />
+		@*@Html.EditorFor(x => x.Input2)*@
+		<input asp-for="Input2.Name" class="form-control" />
+		<div asp-validation-summary="All"></div>
+		<p><input type="submit" value="@UI.SubmitButton" /></p>
+	</form>
+	<hr />
+	<ul>
+		<li>Culture: @System.Globalization.CultureInfo.CurrentCulture.Name</li>
+		<li>UI Culture: @System.Globalization.CultureInfo.CurrentUICulture.Name</li>
+	</ul>
+	@*
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+	*@
+	<script src="~/Scripts/validation.min.js" asp-append-version="true"></script>
+	<script>
+	var v = new aspnetValidation.ValidationService();
+		v.bootstrap();</script>
+</body>
+</html>

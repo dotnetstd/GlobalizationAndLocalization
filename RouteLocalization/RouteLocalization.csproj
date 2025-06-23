@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="RouteLocalization.AspNetCore\**" />
+    <Content Remove="RouteLocalization.AspNetCore\**" />
+    <EmbeddedResource Remove="RouteLocalization.AspNetCore\**" />
+    <None Remove="RouteLocalization.AspNetCore\**" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="RouteLocalization.AspNetCore" Version="1.0.1-rc1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4" localize-content>Welcome</h1>
+    <p localize-args="@(new[] { "https://docs.microsoft.com/aspnet/core" })">Learn about <a href="{0}">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@*<localize>Hello world!</localize>
+<div localize-content>
+    <h1>Title</h1>
+    <p>Moretext for localization.....</p>
+</div>
+
+@using LazZiya.ExpressLocalization
+@inject SharedCultureLocalizer _loc
+
+<h1 class="display-4">@_loc.Text("Welcome")</h1>
+
+
+@using LazZiya.TagHelpers
+@addTagHelper *, LazZiya.TagHelpers
+
+<localization-validation-scripts></localization-validation-scripts>*@
+

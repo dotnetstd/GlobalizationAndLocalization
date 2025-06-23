@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>WebLib</AssemblyName>
+        <PackageId>WebLib</PackageId>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Views\**;MyResources\**;Controllers.OtherController.fr.resx;Controllers.BarController.fr.resx" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.*" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="2.0.*" />
+    </ItemGroup>
+
+</Project>

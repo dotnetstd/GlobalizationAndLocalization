@@ -1,0 +1,104 @@
+@page
+@model Index2Model
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<article class="m-5">
+    @{
+        Func<string, Microsoft.AspNetCore.Html.IHtmlContent>
+        MakeNote =
+        @<div class="note" style="border: 1px solid black; width: 90%; padding: 5px; margin-left: 15px;">
+            <p>
+                <strong>Note</strong>&nbsp;&nbsp; @item
+            </p>
+        </div>;
+    }
+
+    @{
+        Func<System.Collections.Generic.IEnumerable<string>, Microsoft.AspNetCore.Html.IHtmlContent> Menu =
+        @<ul>
+            @foreach (var menuEntry in item)
+            {
+                <li><a href="@menuEntry">@menuEntry</a></li>
+            }
+        </ul>;
+    }
+
+    @MakeNote("Hello from SinjulMSBH .. !!!!")
+    @Menu(new[] { "Home", "About" })
+</article>
+
+
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer2
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Startup> Localizer3
+
+@Localizer["Hello"]
+@Localizer3["Hello"]
+
+
+@using Microsoft.AspNetCore.Localization
+
+@{
+    var requestCultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
+    var requestCulture = requestCultureFeature.RequestCulture;
+}
+<h2>Localization Session Request Culture Provider</h2>
+<b>Current Culture:</b> @requestCulture.Culture.Name
+<br />
+<b>Current UICulture:</b> @requestCulture.UICulture.Name
+
+
+@*نحوه استفاده*@
+
+<h1>@Startup._e["Welcome"]</h1>
+
+
+
+@functions{
+    public string Message { get; private set; }
+
+    public void Get()
+    {
+        Message = "Hello World!";
+    }
+
+    public void Post(string message)
+    {
+        Message = $"{nameof(Post)} handler received \"{message}\"";
+    }
+
+    public void Delete()
+    {
+        Message = $"{nameof(Delete)} handler invoked";
+    }
+
+    public void PutMessage(string message)
+    {
+        Message = $"{nameof(PutMessage)} handler received \"{message}\"";
+    }
+}
+
+<h2>@Message</h2>
+
+<form method="post">
+    <label>Say <input type="text" name="message" value="@Message" /></label>
+
+    <fieldset style="border: 0px; margin: 0px; padding: 4px 0px">
+        <button type="submit" formaction="Delete">Delete</button>
+        <button type="submit" formaction="PutMessage">PutMessage</button>
+        <button type="submit">Post</button>
+    </fieldset>
+</form>
+
+
+@using System.Globalization
+@if (CultureInfo.CurrentCulture.TextInfo.IsRightToLeft)
+{
+    <link rel="stylesheet" type="text/css" href="rtl.css">
+}

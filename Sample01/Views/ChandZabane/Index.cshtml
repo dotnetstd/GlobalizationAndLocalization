@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName }).ToList();
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        text-align: justify;
+        direction: rtl;
+    }
+</style>
+
+<h1 class="text-center bg-primary">@ViewBag.MSBH</h1>
+
+<ul class="list-group">
+    <li clas="list-group-item-info">@Localizer["MSBH1"]</li>
+    <li clas="list-group-item-info">@Localizer["MSBH2"]</li>
+    <li clas="list-group-item-info">@Localizer["MSBH3"]</li>
+    <li clas="list-group-item-info">@Localizer["MSBH4"]</li>
+</ul>
+
+<div title="@Localizer["CultureProvider"] @requestCulture?.Provider?.GetType().Name">
+    <form id="selectLanguage" asp-controller="Home"
+          asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path"
+          method="post" class="form-horizontal" role="form">
+        @Localizer["Language"]
+        <select name="culture"
+                asp-for="@requestCulture.RequestCulture.UICulture.Name"
+                asp-items="cultureItems"></select>
+    </form>
+</div>

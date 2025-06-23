@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="LazZiya.ExpressLocalization.Resources\**" />
+    <Compile Remove="LazZiya.ExpressLocalization\**" />
+    <Compile Remove="LazZiya.TagHelpers.Localization\**" />
+    <Content Remove="LazZiya.ExpressLocalization.Resources\**" />
+    <Content Remove="LazZiya.ExpressLocalization\**" />
+    <Content Remove="LazZiya.TagHelpers.Localization\**" />
+    <EmbeddedResource Remove="LazZiya.ExpressLocalization.Resources\**" />
+    <EmbeddedResource Remove="LazZiya.ExpressLocalization\**" />
+    <EmbeddedResource Remove="LazZiya.TagHelpers.Localization\**" />
+    <None Remove="LazZiya.ExpressLocalization.Resources\**" />
+    <None Remove="LazZiya.ExpressLocalization\**" />
+    <None Remove="LazZiya.TagHelpers.Localization\**" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="LazZiya.ExpressLocalization" Version="2.0.1" />
+    <PackageReference Include="LazZiya.TagHelpers" Version="2.2.1" />
+    <PackageReference Include="LazZiya.TagHelpers.Localization" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

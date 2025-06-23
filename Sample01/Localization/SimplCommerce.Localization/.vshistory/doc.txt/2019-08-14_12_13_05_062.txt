@@ -1,0 +1,82 @@
+﻿        public static IServiceCollection AddCustomizedMvc(this IServiceCollection services, IList<ModuleInfo> modules)
+        {
+            var mvcBuilder = services
+                .AddMvc(o =>
+                {
+                    o.EnableEndpointRouting = false;
+                    o.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+                    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                })
+                .AddRazorOptions(o =>
+                {
+                    foreach (var module in modules.Where(x => !x.IsBundledWithHost))
+                    {
+                        o.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(module.Assembly.Location));
+                    }
+                })
+                .AddViewLocalization()
+                .AddModelBindingMessagesLocalizer(services)
+                .AddDataAnnotationsLocalization(o => {
+                    var factory = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                    var L = factory.Create(null);
+                    o.DataAnnotationLocalizerProvider = (t,f) => L;
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            foreach (var module in modules.Where(x => !x.IsBundledWithHost))
+            {
+                AddApplicationPart(mvcBuilder, module.Assembly);
+            }
+
+            return services;
+        }
+
+		////////////////
+
+		public static IMvcBuilder AddModelBindingMessagesLocalizer
+            (this IMvcBuilder mvc, IServiceCollection services)
+        {
+            return mvc.AddMvcOptions(o =>
+            {
+                var factory = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                var L = factory.Create(null);
+
+                o.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => L["The value '{0}' is invalid.", x]);
+                o.ModelBindingMessageProvider.SetValueMustBeANumberAccessor((x) => L["The field {0} must be a number.", x]);
+                o.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor((x) => L["A value for the '{0}' property was not provided.", x]);
+                o.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => L["The value '{0}' is not valid for {1}.", x, y]);
+                o.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => L["A value is required."]);
+                o.ModelBindingMessageProvider.SetMissingRequestBodyRequiredValueAccessor(() => L["A non-empty request body is required."]);
+                o.ModelBindingMessageProvider.SetNonPropertyAttemptedValueIsInvalidAccessor((x) => L["The value '{0}' is not valid.", x]);
+                o.ModelBindingMessageProvider.SetNonPropertyUnknownValueIsInvalidAccessor(() => L["The value provided is invalid."]);
+                o.ModelBindingMessageProvider.SetNonPropertyValueMustBeANumberAccessor(() => L["The field must be a number."]);
+                o.ModelBindingMessageProvider.SetUnknownValueIsInvalidAccessor((x) => L["The supplied value is invalid for {0}.", x]);
+                o.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => L["Null value is invalid."]);
+            });
+        }
+
+		////////////////
+
+	    public static IApplicationBuilder UseCustomizedRequestLocalization(this IApplicationBuilder app)
+        {
+            string defaultCultureUI = GlobalConfiguration.DefaultCulture;
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var cultureRepository = scope.ServiceProvider.GetRequiredService<IRepositoryWithTypedId<Culture, string>>();
+                GlobalConfiguration.Cultures = cultureRepository.Query().ToList();
+
+                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                defaultCultureUI = config.GetValue<string>("Global.DefaultCultureUI");
+            }
+
+            var supportedCultures = GlobalConfiguration.Cultures.Select(c => c.Id).ToArray();
+            app.UseRequestLocalization(options =>
+            options
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures)
+                .SetDefaultCulture(defaultCultureUI ?? GlobalConfiguration.DefaultCulture)
+                .RequestCultureProviders.Insert(0, new EfRequestCultureProvider())
+            );
+
+            return app;
+        }

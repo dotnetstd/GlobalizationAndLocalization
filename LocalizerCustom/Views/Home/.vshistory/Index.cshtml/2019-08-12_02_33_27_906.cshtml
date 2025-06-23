@@ -1,0 +1,90 @@
+@inject CustomLocalizer localizer
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@localizer["HelloWorld"]</h2>
+    </div>
+</div>
+
+<br />
+<br />
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@model SampleModel
+@inject IViewLocalizer localizer
+@inject IHtmlLocalizer<SharedResource> sharedLocalizer
+CurrentCulture: @CultureInfo.CurrentCulture.Name
+<br />
+CurrentUICulture: @CultureInfo.CurrentUICulture.Name
+<br />
+Resources\Views\Home\Index: @localizer["Hello"]
+<br />
+Resources\SharedResource: @sharedLocalizer["Hello"]
+<br />
+@Html.DisplayNameFor(m => m.Content)
+<br />
+
+
+<div class="row">
+    <br /><br />
+    ### Test URLs:
+    <br /><br />
+    https://localhost:5001/Account/Register?culure=de-CH&ui-culture=de-CH
+    <br /><br />
+    https://localhost:5001/Account/Register?culure=it-CH&ui-culture=it-CH
+    <br /><br />
+    https://localhost:5001/Account/Register?culure=fr-CH&ui-culture=fr-CH
+    <br /><br />
+    https://localhost:5001/Account/Register?culure=en-US&ui-culture=en-US
+    <br /><br />
+</div>
+
+@inject LocService SharedLocalizer
+<h4>@SharedLocalizer.GetLocalizedHtmlString("createNewAccount")</h4>
+@{
+    ViewData["Title"] = @SharedLocalizer.GetLocalizedHtmlString("register");
+}
+
+
+@inject AspNetCorePagesIdentity.Resources.IdentityLocalizationService IdentityLocalizer
+@inject AspNetCorePagesIdentity.Resources.SharedLocalizationService SharedLocalizer
+@{
+    ViewData["Title"] = @IdentityLocalizer.GetLocalizedHtmlString("ACCOUNT_LOGIN");
+    ViewData["Title"] = SharedLocalizer.GetLocalizedHtmlString("ACCOUNT_LOGIN");
+}
+
+@inject IViewLocalizer Localizer
+@Localizer["<h1>Selam {0}</h1>", "<b>G?khan</b>"]
+
+@model ASPNETCoreAndESearch.Models.ProductSearchResponse
+@inject IViewLocalizer Localizer
+
+<div class="container">
+    <h3>@Localizer["Toplam {0} ürün bulundu.", Model.Total]</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>@Localizer["?sim"]</th>
+                <th>@Localizer["Aç?klama"]</th>
+                <th>@Localizer["Fiyat"]</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<MultiLanguageCore.Models.News>
+@inject IViewLocalizer _Localizer
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">@_Localizer["Create"]</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @_Localizer["Title"]
+            </th>
+            <th>
+                @_Localizer["Description"]
+            </th>
+            <th>
+                @_Localizer["ImageName"]
+            </th>
+            <th>
+                @_Localizer["CreateDate"]
+            </th>
+            <th>
+                @_Localizer["Title"]
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Language.LanguageTitle)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.NewsId">@_Localizer["Edit"]</a> |
+                <a asp-action="Details" asp-route-id="@item.NewsId">@_Localizer["Detail"]</a> |
+                <a asp-action="Delete" asp-route-id="@item.NewsId">@_Localizer["Delete"]</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

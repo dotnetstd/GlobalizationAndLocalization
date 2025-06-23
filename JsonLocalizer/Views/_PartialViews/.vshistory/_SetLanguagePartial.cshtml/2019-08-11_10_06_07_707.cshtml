@@ -1,0 +1,38 @@
+@using System.Globalization
+@using CookieLocalizationApp.Localization
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    // Extract the value of the current path ex (/Home/About) //
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path)
+        ? "~/"
+        : $"~{Context.Request.Path.Value}";
+
+    // Get the supported cultures that we have defined and put them in a SelectList to be used in the dropdown below //
+    var cultureItems = JsonLocalizer.CookieLocalizationApp.LocalizationConfiguration.SupportedCultures
+        .Select(cultureItem => new SelectListItem { Value = cultureItem.Name, Text = cultureItem.DisplayName })
+        .ToList();
+
+}
+
+<!-- FORM TO SUBMIT TO LocalizationController with action SetCultureCookie -->
+<form id="selectLanguage"
+      asp-controller="Localization"
+      asp-action="SetCultureCookie"
+      asp-route-returnUrl="@returnUrl"
+      method="post"
+      class="form-horizontal"
+      role="form">
+
+    <!-- DROPDOWN OF CULTURE ITEMS -->
+    <select asp-for="@CultureInfo.CurrentCulture"
+            asp-items="@cultureItems"
+            name="culture"
+            class="form-control"
+            onchange="this.form.submit();"></select>
+</form>

@@ -1,0 +1,20 @@
+﻿@inherits Microsoft.VisualStudio.Web.CodeGeneration.Templating.RazorTemplateBase
+     using Microsoft.AspNetCore.Mvc;
+     using Microsoft.Extensions.Logging;
+
+     namespace @Model.NamespaceName
+    {
+    public class @Model.ClassName : Controller
+    {
+    protected const string returnString = "hello from SinjulMSBH .. !!!!";
+    protected readonly ILogger<@Model.ClassName>
+        Logger;
+        public @Model.ClassName (ILogger<@Model.ClassName>
+            logger = null)
+            {
+            if (null != logger) Logger = logger;
+            Logger.LogInformation(returnString);
+            }
+            public IActionResult Index() => Ok(returnString);
+            }
+            }

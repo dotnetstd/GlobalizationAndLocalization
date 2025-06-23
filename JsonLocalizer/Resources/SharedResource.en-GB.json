@@ -1,0 +1,10 @@
+﻿{
+  "HomePage": "Home",
+  "HomeTitle": "Welcome to my site",
+
+  "AboutPage": "About",
+  "AboutTitle": "This page describes me",
+
+  "ContactPage": "Contact",
+  "ContactTitle": "This page contains contact information"
+}

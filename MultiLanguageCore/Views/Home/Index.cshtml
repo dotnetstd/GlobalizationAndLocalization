@@ -1,0 +1,21 @@
+﻿@model IEnumerable<News>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@foreach (var item in Model)
+{
+    <div class="thumbnail">
+        <h2>@item.Title</h2>
+        <hr/>
+        <img class="thumbnail" src="/NewsImages/@item.ImageName"/>
+        <p>
+            @item.Description
+        </p>
+        <p>
+            @item.CreateDate
+        </p>
+    </div>
+}

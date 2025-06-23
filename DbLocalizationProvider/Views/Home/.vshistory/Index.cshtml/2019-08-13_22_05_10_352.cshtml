@@ -1,0 +1,147 @@
+@using System.Globalization
+@using DbLocalizationProvider
+@using DbLocalizationProvider.AspNetCore
+@using DbLocalizationProvider.Core.AspNetSample.Models
+@using DbLocalizationProvider.Core.AspNetSample.Resources
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@model UserViewModel
+@inject IViewLocalizer Localizer
+@inject LocalizationProvider Provider
+@inject IHtmlLocalizer<SampleResources> Localizer2
+
+@{
+    ViewData["Title"] = "Home Page";
+    var currentCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture?.UICulture;
+
+    var localized = Provider.Translate<SampleResources>();
+}
+
+@model UserViewModel
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<MyProject.SampleResources> HtmlLocalizer
+
+@Localizer.GetString(() => MyProject.SampleResources.SomeCommonText)
+@HtmlLocalizer.GetString(r => r.PageHeader)
+
+<div>
+    Html.GetTranslations()...
+    @Html.GetTranslations(typeof(SampleResources))
+    @(Html.GetTranslations(() => Shared.CommonResources.Yes))
+
+    @Html.GetTranslations(typeof(SampleResources), "no", "jsl10nNO")
+    ..
+    @Html.GetTranslations(typeof(SampleResources), "no", "jsl10nNO2")
+
+    <div id="placeHolder1"></div>
+    <div id="placeHolder2"></div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('placeHolder1').innerHTML = window.jsl10n.DbLocalizationProvider.Core.AspNetSample.Resources.SampleResources.SomeHtmlResource + " (" + window.jsl10n.DbLocalizationProvider.Core.AspNetSample.Resources.Shared.CommonResources.Yes + ")";
+    document.getElementById('placeHolder2').innerHTML = window.jsl10nNO.DbLocalizationProvider.Core.AspNetSample.Resources.SampleResources.SomeHtmlResource;
+</script>
+
+<h2>Current Culture: @currentCulture</h2>
+
+<div>Translate&lt;SampleResources&gt;(PageHeader2) - @localized.PageHeader2</div>
+<div>ViewData["TestString"] ("Shared.Yes") = @ViewData["TestString"]</div>
+<div>ViewData["TestString2"] = @ViewData["TestString2"]</div>
+<div>ViewData["TestString3"] (injected LocalizationProvider) = @ViewData["TestString3"]</div>
+<div>ViewData["TestString4"] (IHtmlLocalizer) = @ViewData["TestString4"]</div>
+<div>IViewLocalizer.GetString() = @Localizer.GetString(() => SampleResources.PageHeader)</div>
+<div>IViewLocalizer["..."] = @Localizer["DbLocalizationProvider.Core.AspNetSample.Resources.SampleResources.PageHeader"]</div>
+<div>IHtmlLocalizer&lt;T&gt;.GetString() = @Localizer2.GetString(r => r.PageHeader2)</div>
+
+
+<div>
+    <div>IHtmlLocalizer.WithCulture() = @(Localizer2.WithCulture(new CultureInfo("no")).GetString(() => SampleResources.PageHeader))</div>
+</div>
+
+<hr />
+
+<div>
+    HtmlHelper.LabelFor(UserName) - @Html.LabelFor(m => m.UserName)
+</div>
+<div>
+    HtmlHelper.TranslateFor(UserName) - @Html.TranslateFor(m => m.UserName)
+</div>
+<div>
+    HtmlHelper.TranslateFor(UserName, WeirdCustomAttribute) - @Html.TranslateFor(m => m.UserName, typeof(WeirdCustomAttribute))
+</div>
+<div>
+    HtmlHelper.DescriptionFor(UserName) - @Html.DescriptionFor(m => m.UserName)
+</div>
+
+<form asp-controller="Home" asp-action="Index" method="post">
+    <div>
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <fieldset>
+        <legend>Address</legend>
+        <div>
+            <label asp-for="Address.Street"></label>
+            <input asp-for="Address.Street" type="password" />
+            <span asp-validation-for="Address.Street"></span>
+        </div>
+    </fieldset>
+    <button type="submit">Submit</button>
+</form>
+
+<hr />
+<div>
+    <span>This is coming from AJAX call to jsl10n endpoint with JSON parameter:</span><span id="theJsPlaceholder4"></span>
+</div>
+<div>
+    <span>This is coming from AJAX call to jsl10n endpoint with JSON parameter (MyProject.ContainerClass+NestedClass+TheResourceClass.SomeKey):</span><span id="theJsPlaceholder5"></span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: '/jsl10n/MyProject.SampleResources?json=true',
+            method: 'GET'
+        }).done(function (data) {
+            document.getElementById('theJsPlaceholder4').innerHTML = data.MyProject.SampleResources.PageHeader;
+        });
+
+        $.ajax({
+            url: '/jsl10n/MyProject.ContainerClass---NestedClass---TheResourceClass.SomeKey',
+            method: 'GET',
+            headers: {
+                Accept: "application/json, text/plain, */*"
+            },
+            xhr: function () {
+                // Get new xhr object using default factory
+                var xhr = $.ajaxSettings.xhr();
+                // Copy the browser's native setRequestHeader method
+                var setRequestHeader = xhr.setRequestHeader;
+                // Replace with a wrapper
+                xhr.setRequestHeader = function (name, value) {
+                    // Ignore the X-Requested-With header
+                    if (name == 'X-Requested-With') return;
+                    // Otherwise call the native setRequestHeader method
+                    // Note: setRequestHeader requires its 'this' to be the xhr object,
+                    // which is what 'this' is here when executed.
+                    setRequestHeader.call(this, name, value);
+                }
+                // pass it on to jQuery
+                return xhr;
+            }
+        }).done(function (data) {
+            document.getElementById('theJsPlaceholder5').innerHTML = data.MyProject.ContainerClass.NestedClass.TheResourceClass.SomeKey;
+        });
+    });
+</script>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,13 @@
+@{
+    string returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<p>&copy; 2018 - DDona.Core.MVC.Localization</p>
+<p>
+    <a asp-controller="Home" asp-action="ChangeCulture" asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">
+        English
+    </a>
+    <a asp-controller="Home" asp-action="ChangeCulture" asp-route-culture="pt-BR" asp-route-returnUrl="@returnUrl">
+        Brazilian Portuguese
+    </a>
+</p>

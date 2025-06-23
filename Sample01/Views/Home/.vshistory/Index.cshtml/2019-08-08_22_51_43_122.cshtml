@@ -1,0 +1,28 @@
+@model TestModel
+
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Welcome</h1>
+	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+
+@ViewData["Welcome"]
+<br />
+@ViewData["Welcome2"]
+<br />
+
+<h1>@Web.Resources.Text.Hello</h1>
+
+<div>
+	Test string resolved by the view: @CoreLocalizationTest.Resources.Resource.Test
+</div>
+<div>
+	Test string resolved by the controller: @Model.TestString1
+</div>
+<div>
+	Test string resolved by the model: @Model.TestString2
+</div>

@@ -1,0 +1,106 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <DefineConstants Condition="'$(GenerateBaselines)'=='true'">$(DefineConstants);GENERATE_BASELINES</DefineConstants>
+        <DefineConstants>$(DefineConstants);__RemoveThisBitTo__GENERATE_BASELINES</DefineConstants>
+
+        <!-- set explicitly because some tests depend on this -->
+        <!--<RootNamespace>Entropy.FunctionalTests</RootNamespace>-->
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="JsonFileLocalization.Tests\**" />
+      <Compile Remove="Localization.AspNetCore.TagHelpers.Tests\**" />
+      <Compile Remove="SecretCollect.Localization.SqlLocalize\**" />
+      <EmbeddedResource Remove="JsonFileLocalization.Tests\**" />
+      <EmbeddedResource Remove="Localization.AspNetCore.TagHelpers.Tests\**" />
+      <EmbeddedResource Remove="SecretCollect.Localization.SqlLocalize\**" />
+      <None Remove="JsonFileLocalization.Tests\**" />
+      <None Remove="Localization.AspNetCore.TagHelpers.Tests\**" />
+      <None Remove="SecretCollect.Localization.SqlLocalize\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\Adapters\BaseLocalizationValidationAttributeAdapterTest.cs" />
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\Adapters\DefaultLocalizationValidationAttributeAdapterTest.cs" />
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\Adapters\StringLengthLocalizationValidationAttributeAdapterTest.cs" />
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\ForEvolveLocalizationValidationMetadataProviderTest.cs" />
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\ForEvolveMvcDefaultLocalizationAdapterOptionsTest.cs" />
+      <Compile Remove="ForEvolve.AspNetCore.Localization.Tests\RazorPagesLocalizationTest.cs" />
+    </ItemGroup>
+
+    <!--<ItemGroup>
+        <EmbeddedResource Include="resources\**\*" />
+        <Content Include="nginx.conf" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>-->
+
+    <ItemGroup>
+        <PackageReference Include="Aurochses.Xunit" Version="2.2.3" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="2.2.0" />
+
+        <PackageReference Include="Aurochses.Xunit.AspNetCore.Mvc.Localization" Version="2.2.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0-preview-20190808-03" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="1.0.1" />
+
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
+        <PackageReference Include="AngleSharp" Version="0.11.0" />
+        <PackageReference Include="Moq" Version="4.10.1" />
+
+        <!--<PackageReference Include="Microsoft.AspNetCore" Version="$(MicrosoftAspNetCorePackageVersion)" />-->
+        <!--<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="$(MicrosoftAspNetCoreHostingPackageVersion)" />-->
+        <!--<PackageReference Include="Microsoft.AspNetCore.Server.IntegrationTesting" Version="$(MicrosoftAspNetCoreServerIntegrationTestingPackageVersion)" />-->
+        <!--<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(MicrosoftAspNetCoreTestHostPackageVersion)" />-->
+        <!--<PackageReference Include="Microsoft.AspNetCore.Testing" Version="$(MicrosoftAspNetCoreTestingPackageVersion)" />-->
+        <!--<PackageReference Include="Microsoft.Extensions.Logging.Testing" Version="$(MicrosoftExtensionsLoggingTestingPackageVersion)" />-->
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Aurochses.Xunit.AspNetCore.Mvc.Localization.Tests\" />
+        <Folder Include="ForEvolve.AspNetCore.Localization.Tests\Adapters\" />
+    </ItemGroup>
+
+
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+        <ProjectReference Include="..\..\samples\Mvc.LocalizationSample.Web\Mvc.LocalizationSample.Web.csproj" />
+    </ItemGroup>
+
+    -->
+    <!--
+   Our functional tests utilize DependencyContext.Load which looks next to a dll for a deps.json. For each of our test
+   applications they need to have their corresponding deps.json placed next to their .dll in order to work.
+   -->
+    <!--
+    <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+        <ItemGroup>
+            <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+        </ItemGroup>
+
+        <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+    </Target>-->
+
+    <!--<ItemGroup>
+        <Compile Update="Resources\DataAnnotationTestResource.Designer.cs">
+            <DependentUpon>DataAnnotationTestResource.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\DataAnnotationTestResource.resx">
+            <LastGenOutput>DataAnnotationTestResource.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+        </EmbeddedResource>
+    </ItemGroup>-->
+
+</Project>

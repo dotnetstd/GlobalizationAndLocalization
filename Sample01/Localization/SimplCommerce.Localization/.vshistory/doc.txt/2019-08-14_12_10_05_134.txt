@@ -1,0 +1,24 @@
+﻿            var mvcBuilder = services
+                .AddMvc(o =>
+                {
+                    o.EnableEndpointRouting = false;
+                    o.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+                    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                })
+                .AddRazorOptions(o =>
+                {
+                    foreach (var module in modules.Where(x => !x.IsBundledWithHost))
+                    {
+                        o.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(module.Assembly.Location));
+                    }
+                })
+                .AddViewLocalization()
+                .AddModelBindingMessagesLocalizer(services)
+                .AddDataAnnotationsLocalization(o => {
+                    var factory = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                    var L = factory.Create(null);
+                    o.DataAnnotationLocalizerProvider = (t,f) => L;
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+

@@ -1,0 +1,22 @@
+@model Book
+@{
+    ViewData["Title"] = "TestModelValidation";
+}
+
+<h2>Test Model Validation Localization</h2>
+<form asp-action="TestModelValidation" asp-antiforgery="true">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span class="text-danger" asp-validation-for="Title"></span>
+    </div>
+    <div class="from-group">
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+</form>
+
+@section Scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.j"></script>
+}

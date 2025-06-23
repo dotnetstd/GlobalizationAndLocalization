@@ -1,0 +1,21 @@
+{
+	"ConnectionStrings": {
+		"DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=aspnet-Sample01-62D5BB55-5B6F-4DD7-B3E0-B271F0633C61;Trusted_Connection=True;MultipleActiveResultSets=true"
+	},
+	"Logging": {
+		"LogLevel": {
+			"Default": "Warning"
+		}
+	},
+	"AllowedHosts": "*",
+
+	"Localization": {
+		"Culture": "ar-YE",
+		"UICulture": "ar-YE"
+	},
+	"AppOptions": {
+		"Culture": "en-US", // fa-IR for Persian
+		"UICulture": "en-US", // same as above
+		"CultureDirection": "ltr" // rtl for Persian/Arabic/Hebrew
+	}
+}

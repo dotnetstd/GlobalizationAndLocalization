@@ -1,0 +1,61 @@
+@model RegisterViewModel
+
+@{
+      var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+@{
+      ViewData[ "Title" ] = Localizer[ "Title" ];
+}
+
+@if ( Model != null )
+{
+      <article class="panel panel-success text-center">
+            <div class="panel-heading">
+                  <span class="text-primary lead">@Localizer[ "Your Account Info in SinjulMSBH WebSite :" ]</span>
+            </div>
+            <div class="panel-body">
+                  <h4><span class="text-info">@Localizer[ "Your Email :" ]</span> @Model.Email</h4>
+                  <h4><span class="text-info">@Localizer[ "Your Password :" ]</span> @Model.Password</h4>
+                  <h4><span class="text-info">@Localizer[ "Your Confirm password :" ]</span> @Model.ConfirmPassword</h4>
+            </div>
+      </article>
+}
+
+<section class="container">
+	@*asp-route-returnurl="@returnUrl" *@
+	<form asp-action="CreateMe" asp-controller="Home"
+		  method="post">
+
+		<div asp-validation-summary="All" class="text-danger"></div>
+		@*<input type="hidden" name="returnUrl" value="@returnUrl" />*@
+
+		<section class="form-horizontal">
+			<div class="form-group">
+				<label asp-for="Email"></label>
+				<input asp-for="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Password"></label>
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ConfirmPassword"></label>
+				<input asp-for="ConfirmPassword" class="form-control" />
+				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-primary" type="submit">@Localizer["Submit"]</button>
+			</div>
+		</section>
+	</form>
+</section>
+
+@section Scripts {
+
+      @{ await Html.RenderPartialAsync( "_ValidationScriptsPartial" ); }
+
+}

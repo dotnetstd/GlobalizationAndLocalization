@@ -1,0 +1,180 @@
+﻿        public static IServiceCollection AddCustomizedMvc(this IServiceCollection services, IList<ModuleInfo> modules)
+        {
+            var mvcBuilder = services
+                .AddMvc(o =>
+                {
+                    o.EnableEndpointRouting = false;
+                    o.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+                    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                })
+                .AddRazorOptions(o =>
+                {
+                    foreach (var module in modules.Where(x => !x.IsBundledWithHost))
+                    {
+                        o.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(module.Assembly.Location));
+                    }
+                })
+                .AddViewLocalization()
+                .AddModelBindingMessagesLocalizer(services)
+                .AddDataAnnotationsLocalization(o => {
+                    var factory = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                    var L = factory.Create(null);
+                    o.DataAnnotationLocalizerProvider = (t,f) => L;
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            foreach (var module in modules.Where(x => !x.IsBundledWithHost))
+            {
+                AddApplicationPart(mvcBuilder, module.Assembly);
+            }
+
+            return services;
+        }
+
+		////////////////
+
+		public static IMvcBuilder AddModelBindingMessagesLocalizer
+            (this IMvcBuilder mvc, IServiceCollection services)
+        {
+            return mvc.AddMvcOptions(o =>
+            {
+                var factory = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                var L = factory.Create(null);
+
+                o.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => L["The value '{0}' is invalid.", x]);
+                o.ModelBindingMessageProvider.SetValueMustBeANumberAccessor((x) => L["The field {0} must be a number.", x]);
+                o.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor((x) => L["A value for the '{0}' property was not provided.", x]);
+                o.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => L["The value '{0}' is not valid for {1}.", x, y]);
+                o.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => L["A value is required."]);
+                o.ModelBindingMessageProvider.SetMissingRequestBodyRequiredValueAccessor(() => L["A non-empty request body is required."]);
+                o.ModelBindingMessageProvider.SetNonPropertyAttemptedValueIsInvalidAccessor((x) => L["The value '{0}' is not valid.", x]);
+                o.ModelBindingMessageProvider.SetNonPropertyUnknownValueIsInvalidAccessor(() => L["The value provided is invalid."]);
+                o.ModelBindingMessageProvider.SetNonPropertyValueMustBeANumberAccessor(() => L["The field must be a number."]);
+                o.ModelBindingMessageProvider.SetUnknownValueIsInvalidAccessor((x) => L["The supplied value is invalid for {0}.", x]);
+                o.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => L["Null value is invalid."]);
+            });
+        }
+
+		////////////////
+
+	    public static IApplicationBuilder UseCustomizedRequestLocalization(this IApplicationBuilder app)
+        {
+            string defaultCultureUI = GlobalConfiguration.DefaultCulture;
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var cultureRepository = scope.ServiceProvider.GetRequiredService<IRepositoryWithTypedId<Culture, string>>();
+                GlobalConfiguration.Cultures = cultureRepository.Query().ToList();
+
+                var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                defaultCultureUI = config.GetValue<string>("Global.DefaultCultureUI");
+            }
+
+            var supportedCultures = GlobalConfiguration.Cultures.Select(c => c.Id).ToArray();
+            app.UseRequestLocalization(options =>
+            options
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures)
+                .SetDefaultCulture(defaultCultureUI ?? GlobalConfiguration.DefaultCulture)
+                .RequestCultureProviders.Insert(0, new EfRequestCultureProvider())
+            );
+
+            return app;
+        }
+
+		////////////////
+
+		@using Microsoft.AspNetCore.Localization
+		@using SimplCommerce.Infrastructure
+		@using SimplCommerce.Module.Core.Extensions
+
+		@inject IViewLocalizer Localizer
+		@inject IWorkContext WorkContext
+
+		@{
+			var uiCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture.Name;
+			var selectedCulture = (await WorkContext.GetCurrentUser()).Culture;
+		}
+
+		@if (GlobalConfiguration.Cultures.Count() > 1)
+		{
+		<li class="nav-item dropdown">
+			<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+				Language (@uiCulture)
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu lang-selector">
+				@foreach (var culture in GlobalConfiguration.Cultures)
+				{
+					<li class="dropdown-item">
+						<a href="#" data-value="@culture.Id">@culture.Name
+						@if (culture.Id == selectedCulture)
+						{
+							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						}
+						</a>
+					</li>
+				}
+			</ul>
+			<form asp-area="Localization" asp-controller="Localization" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" id="lang-form" role="form">
+				<input type="hidden" name="culture" value="@uiCulture" />
+			</form>
+		</li>
+		}
+
+		////////////////
+
+		@using SimplCommerce.Module.Core.Models
+		@using SimplCommerce.Module.Core.Extensions
+
+		@inject IWorkContext WorkContext
+		@inject SignInManager<User> SignInManager
+
+		@if (SignInManager.IsSignedIn(User))
+		{
+			<li class="nav-item">
+				<a class="nav-link" asp-area="Core" asp-controller="Manage" asp-action="Index" title="@Localizer["Manage"]">@Localizer["Hello {0}!", (await WorkContext.GetCurrentUser()).FullName]</a>
+			</li>
+			if (User.IsInRole("admin") || User.IsInRole("vendor"))
+			{
+				<li class="nav-item"><a class="nav-link" asp-area="Core" asp-controller="HomeAdmin" asp-action="Index">@Localizer["Dashboard"]</a></li>
+			}
+			<li class="nav-item">
+				<form asp-area="Core" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="">
+					<button type="submit" class="btn btn-link">@Localizer["Log off"]</button>
+				</form>
+			</li>
+		}
+		else
+		{
+			<li class="nav-item"><a class="nav-link" asp-area="Core" asp-controller="Account" asp-action="Login">@Localizer["Log in"]</a></li>
+			<li class="nav-item"><a class="nav-link" asp-area="Core" asp-controller="Account" asp-action="Register">@Localizer["Register"]</a></li>
+		}
+
+
+
+		////////////////
+
+		@using System.Globalization
+		<html lang="@CultureInfo.CurrentUICulture.Name.ToLowerInvariant()">
+
+        <h4>@Localizer["Information"]</h4>
+
+		<script>
+				window.simplGlobalSetting = {};
+				window.simplGlobalSetting.lang = '@CultureInfo.CurrentCulture.Name';
+		</script>
+
+		@if(CultureInfo.CurrentCulture.Name != SimplCommerce.Infrastructure.GlobalConfiguration.DefaultCulture)
+		{
+			<script simpl-append-version="true" src="~/lib/bootstrap-star-rating/js/locales/@(CultureInfo.CurrentCulture.Name).js"></script>
+		}
+
+		////////////////
+
+
+
+		////////////////
+
+
+
+		////////////////

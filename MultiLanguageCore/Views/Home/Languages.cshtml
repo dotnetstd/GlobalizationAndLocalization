@@ -1,0 +1,6 @@
+﻿@model IEnumerable<Language>
+
+@foreach (var item in Model)
+{
+    <li><a href="/Home/ChangeLanguage?culture=@item.LanguageTitle">@item.LanguageTitle</a></li>
+}

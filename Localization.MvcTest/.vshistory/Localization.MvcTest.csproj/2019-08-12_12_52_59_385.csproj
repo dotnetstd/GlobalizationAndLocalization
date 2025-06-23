@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Raveshmand.Localization.EntityFramework" Version="1.0.0" />
+    <PackageReference Include="Raveshmand.Localization.Json" Version="1.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Localization.Core\" />
+    <Folder Include="Localization.Xml\" />
+    <Folder Include="Localization.Json\" />
+    <Folder Include="Localization.EntityFramework\" />
+  </ItemGroup>
+
+</Project>

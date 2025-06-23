@@ -1,0 +1,49 @@
+﻿<br />
+<section>
+    @{ var requestCulture = Context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>();
+        var UiCulture = requestCulture.RequestCulture.UICulture.Name.ToString();
+        var Culture = requestCulture.RequestCulture.Culture.Name.ToString();
+    }
+
+    @if (UiCulture == "fa-IR" || Culture == "fa")
+    {
+        <div class="text-center">
+            <span class="btn btn-default" onclick="$('#SetLangEN').submit();" style="cursor:pointer;">English Post</span>
+            <span class="btn btn-default active" onclick="$('#SetLangFA').submit();" style="cursor:pointer;color:red;">Persian Post</span>
+        </div>
+
+        <div class="text-center">
+            <a class="btn btn-link" href="@Context.Request.Path?culture=en&ui-culture=en-US">English Url</a>
+            <a class="btn btn-link" href="@Context.Request.Path?culture=fa&ui-culture=fa-IR" style="color:red;">Persian Url</a>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <span class="btn btn-default active" onclick="$('#SetLangEN').submit();" style="cursor:pointer;color:red;">English Post</span>
+            <span class="btn btn-default" onclick="$('#SetLangFA').submit();" style="cursor:pointer;">Persian Post</span>
+        </div>
+
+        <div class="text-center">
+            <a class="btn btn-link" href="@Context.Request.Path?culture=en&ui-culture=en-US" style="color:red;">English Url</a>
+            <a class="btn btn-link" href="@Context.Request.Path?culture=fa&ui-culture=fa-IR">Persian Url</a>
+        </div>
+    }
+
+    <div style="display:none;">
+        <form id="SetLangFA" asp-controller="Home"
+              asp-action="SetLanguage" method="post"
+              asp-route-ReturnUrl="@Context.Request.Path">
+            <input type="hidden" name="ReturnUrl" value="@Context.Request.Path" />
+            <input type="hidden" name="Culture" value="fa-IR" />
+            <input type="submit" value="submit" />
+        </form>
+        <form id="SetLangEN" asp-controller="Home"
+              asp-action="SetLanguage" method="post"
+              asp-route-ReturnUrl="@Context.Request.Path">
+            <input type="hidden" name="ReturnUrl" value="@Context.Request.Path" />
+            <input type="hidden" name="Culture" value="en-US" />
+            <input type="submit" value="submit" />
+        </form>
+    </div>
+</section>

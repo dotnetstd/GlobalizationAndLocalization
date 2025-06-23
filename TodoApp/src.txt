@@ -1,0 +1,6 @@
+﻿https://github.com/anderskaplan/Pseudolocalizer
+https://github.com/martincostello/Pseudolocalizer
+https://blog.martincostello.com/aspnet-core-pseudo-localization/
+https://github.com/martincostello/aspnet-core-pseudo-localization
+https://github.com/martincostello/Pseudolocalizer
+https://docs.microsoft.com/en-gb/windows/win32/intl/using-pseudo-locales-for-localization-testing

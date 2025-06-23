@@ -1,0 +1,23 @@
+{
+  /// <summary>
+  /// Example of how you could build a routes localizer
+  /// </summary>
+  /// <example>
+  ///
+  /// This one parses a /routes.json file that has this schema:
+  /// "Culture": {
+  ///     "Theme": {
+  ///         "RouteName":  "Translation"
+  ///     }
+  /// }
+  ///
+  /// for example:
+  ///
+  /// "sv-SE": {
+  ///     "Dog": {
+  ///         "how-it-works":"hur-det-fungerar"
+  /// }}
+  ///
+  ///
+  /// </example>
+}

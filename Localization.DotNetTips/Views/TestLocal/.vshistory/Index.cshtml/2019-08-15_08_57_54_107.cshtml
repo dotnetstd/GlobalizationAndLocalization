@@ -1,0 +1,48 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@model TestResources.ViewModels.Account.RegisterViewModel
+
+@inject IHtmlLocalizerFactory HtmlLocalizerFactory
+
+@{
+    var localizer = HtmlLocalizerFactory.Create(
+                baseName: "Controllers.TestLocalController" /*مشخصات كنترلر جاري*/,
+                location: "TestResources.ExternalResources" /*نام اسمبلي ثالث*/);
+
+    var sharedLocalizer = HtmlLocalizerFactory.Create(
+                baseName: "SharedResource" /*مشخصات*/,
+                location: "TestResources.ExternalResources" /*نام اسمبلي ثالث*/);
+}
+
+Activate Persian Localization:
+<a asp-controller="TestLocal" asp-action="SetFaLanguage">SetFaLanguage</a>
+<br />
+Message @ViewData["Message"]
+<br />
+@localizer["<b>Hello</b><i> {0}</i>", "DNT"]
+<br />
+@localizer["About Title"]
+<br />
+shared data: @sharedLocalizer["About Title"]
+<form asp-controller="TestLocal" asp-action="Index" method="post" class="form-horizontal" role="form">
+    <input asp-for="Email" />
+    <span asp-validation-for="Email" class="text-danger"></span>
+    <input type="submit" />
+</form>
+
+
+@{
+    var localizer2 = MyHtmlLocalizerFactory.Create(
+                baseName: "Controllers.TestLocalController" /*مشخصات كنترلر جاري*/,
+                location: "TestResources.ExternalResources" /*نام اسمبلي ثالث*/);
+
+    var sharedLocalizer2 = MyHtmlLocalizerFactory.Create(
+                baseName: "SharedResource" /*مشخصات*/,
+                location: "TestResources.ExternalResources" /*نام اسمبلي ثالث*/);
+}
+
+@{
+    if (IsAuthenticated())
+    {
+        <text>MySharedLocalizer from MyCustomBaseView: @MySharedLocalizer["About Title"]</text>
+    }
+}

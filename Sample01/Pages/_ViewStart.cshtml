@@ -1,0 +1,28 @@
+﻿@*@using Microsoft.AspNetCore.Localization
+    @using Microsoft.AspNetCore.Mvc.Localization
+    @{
+        var CultureName = Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture.Name;
+        if (CultureName == "fa-IR")
+        {
+            Layout = "_LayoutFA";
+        }
+        else
+        {
+            Layout = "_Layout";
+        }
+    }*@
+
+
+@{
+    var CultureName = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
+    var UiCultureName = Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture.Name;
+
+    if (CultureName == "fa" || UiCultureName == "fa-IR")
+    {
+        Layout = "_LayoutFA";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+}

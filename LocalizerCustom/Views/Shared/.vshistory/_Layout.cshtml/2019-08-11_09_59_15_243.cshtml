@@ -1,0 +1,169 @@
+@inject CustomLocalizer localizer
+
+@inject IOptions<RequestLocalizationOptions> LocalizationOptions
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
+    var cultures = LocalizationOptions.Value.SupportedUICultures.ToList();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LocalizerCustom</title>
+    @{
+        var culture = Context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>().RequestCulture.UICulture;
+    }
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        @if (culture.TextInfo.IsRightToLeft)
+        {
+            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-rtl.css" asp-append-version="true" />
+            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-flipped.css" asp-append-version="true" />
+            <link rel="stylesheet" href="~/css/site-rtl.css" asp-append-version="true" />
+        }
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+        @if (culture.TextInfo.IsRightToLeft)
+        {
+            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-rtl.min.css" asp-append-version="true" />
+        }
+    </environment>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LocalizerCustom</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">@localizer["Home"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Home" asp-action="About">@localizer["About"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Contacts">@localizer["Contacts"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Home" asp-action="Login">@localizer["SignIn"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                @SR["Language"] <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @foreach (var item in cultures)
+                                {
+                                    var active = item.Name == requestCulture.Name ? "active" : null;
+                                    var direction = item.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+                                    <text>
+                                        <li class="@active">
+                                            <a style="direction:@direction" asp-area="" asp-controller="Home" asp-action="SetCulture" asp-route-culture="@item.Name" asp-route-returnUrl="@Context.Request.Path">@item.NativeName</a>
+                                        </li>
+                                    </text>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+
+        @{
+            string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+            string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+        }
+
+        <div class="container">
+            &copy; 2019 - LocalizerCustom - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <ul class="nav navbar-nav">
+                <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
+                <li is-active-language asp-route-lang="et"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="et">Eesti</a></li>
+                <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
+            </ul>
+        </div>
+
+
+        @inject AspNetCorePagesIdentity.Resources.SharedLocalizationService SharedLocalizer
+        @*<p>language switch from: https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/</p>*@
+        @using System.Threading.Tasks
+        @using Microsoft.AspNetCore.Builder
+        @using Microsoft.AspNetCore.Localization
+        @using Microsoft.AspNetCore.Mvc.Localization
+        @using Microsoft.Extensions.Options
+
+        @inject IViewLocalizer Localizer
+        @inject IOptions<RequestLocalizationOptions> LocOptions
+
+        @{
+            var requestCulture2 = Context.Features.Get<IRequestCultureFeature>();
+            var cultureItems = LocOptions.Value.SupportedUICultures
+                .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+                .ToList();
+        }
+
+        <div title="@Localizer["Request culture provider:"] @requestCulture2?.Provider?.GetType().Name">
+            <form id="selectLanguage" asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" class="form-horizontal" role="form">
+                <label class="form-label">@SharedLocalizer.GetLocalizedHtmlString("LANGUAGE")</label>
+                <div class="input-group">
+
+                    <select class="custom-select" name="culture" asp-for="@requestCulture2.RequestCulture.UICulture.Name" asp-items="cultureItems"></select>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-secondary" type="button">@SharedLocalizer.GetLocalizedHtmlString("SAVE")</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @using LocalizerCustom.Helpers
+        @Html.LocalizedLink("tr", "Türkçe") - @Html.LocalizedLink("en", "English")
+
+    </footer>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
